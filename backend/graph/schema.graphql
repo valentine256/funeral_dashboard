@@ -1,0 +1,466 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  delete data from the table: "order"
+  """
+  delete_order(
+    """filter the rows which have to be deleted"""
+    where: order_bool_exp!
+  ): order_mutation_response
+
+  """
+  delete single row from the table: "order"
+  """
+  delete_order_by_pk(id: uuid!): order
+
+  """
+  insert data into the table: "order"
+  """
+  insert_order(
+    """the rows to be inserted"""
+    objects: [order_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: order_on_conflict
+  ): order_mutation_response
+
+  """
+  insert a single row into the table: "order"
+  """
+  insert_order_one(
+    """the row to be inserted"""
+    object: order_insert_input!
+
+    """upsert condition"""
+    on_conflict: order_on_conflict
+  ): order
+
+  """
+  update data of the table: "order"
+  """
+  update_order(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: order_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: order_set_input
+
+    """filter the rows which have to be updated"""
+    where: order_bool_exp!
+  ): order_mutation_response
+
+  """
+  update single row of the table: "order"
+  """
+  update_order_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: order_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: order_set_input
+    pk_columns: order_pk_columns_input!
+  ): order
+}
+
+"""order"""
+type order {
+  id: uuid!
+  name: String
+  quantity: Int!
+}
+
+"""
+aggregated selection of "order"
+"""
+type order_aggregate {
+  aggregate: order_aggregate_fields
+  nodes: [order!]!
+}
+
+"""
+aggregate fields of "order"
+"""
+type order_aggregate_fields {
+  avg: order_avg_fields
+  count(columns: [order_select_column!], distinct: Boolean): Int!
+  max: order_max_fields
+  min: order_min_fields
+  stddev: order_stddev_fields
+  stddev_pop: order_stddev_pop_fields
+  stddev_samp: order_stddev_samp_fields
+  sum: order_sum_fields
+  var_pop: order_var_pop_fields
+  var_samp: order_var_samp_fields
+  variance: order_variance_fields
+}
+
+"""aggregate avg on columns"""
+type order_avg_fields {
+  quantity: Float
+}
+
+"""
+Boolean expression to filter rows from the table "order". All fields are combined with a logical 'AND'.
+"""
+input order_bool_exp {
+  _and: [order_bool_exp!]
+  _not: order_bool_exp
+  _or: [order_bool_exp!]
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  quantity: Int_comparison_exp
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+"""
+unique or primary key constraints on table "order"
+"""
+enum order_constraint {
+  """unique or primary key constraint"""
+  order_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "order"
+"""
+input order_inc_input {
+  quantity: Int
+}
+
+"""
+input type for inserting data into table "order"
+"""
+input order_insert_input {
+  id: uuid
+  name: String
+  quantity: Int
+}
+
+"""aggregate max on columns"""
+type order_max_fields {
+  id: uuid
+  name: String
+  quantity: Int
+}
+
+"""aggregate min on columns"""
+type order_min_fields {
+  id: uuid
+  name: String
+  quantity: Int
+}
+
+"""
+response of any mutation on the table "order"
+"""
+type order_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [order!]!
+}
+
+"""
+on_conflict condition type for table "order"
+"""
+input order_on_conflict {
+  constraint: order_constraint!
+  update_columns: [order_update_column!]! = []
+  where: order_bool_exp
+}
+
+"""Ordering options when selecting data from "order"."""
+input order_order_by {
+  id: order_by
+  name: order_by
+  quantity: order_by
+}
+
+"""primary key columns input for table: order"""
+input order_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "order"
+"""
+enum order_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  quantity
+}
+
+"""
+input type for updating data in table "order"
+"""
+input order_set_input {
+  id: uuid
+  name: String
+  quantity: Int
+}
+
+"""aggregate stddev on columns"""
+type order_stddev_fields {
+  quantity: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type order_stddev_pop_fields {
+  quantity: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type order_stddev_samp_fields {
+  quantity: Float
+}
+
+"""aggregate sum on columns"""
+type order_sum_fields {
+  quantity: Int
+}
+
+"""
+update columns of table "order"
+"""
+enum order_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  quantity
+}
+
+"""aggregate var_pop on columns"""
+type order_var_pop_fields {
+  quantity: Float
+}
+
+"""aggregate var_samp on columns"""
+type order_var_samp_fields {
+  quantity: Float
+}
+
+"""aggregate variance on columns"""
+type order_variance_fields {
+  quantity: Float
+}
+
+type query_root {
+  """
+  fetch data from the table: "order"
+  """
+  order(
+    """distinct select on columns"""
+    distinct_on: [order_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [order_order_by!]
+
+    """filter the rows returned"""
+    where: order_bool_exp
+  ): [order!]!
+
+  """
+  fetch aggregated fields from the table: "order"
+  """
+  order_aggregate(
+    """distinct select on columns"""
+    distinct_on: [order_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [order_order_by!]
+
+    """filter the rows returned"""
+    where: order_bool_exp
+  ): order_aggregate!
+
+  """fetch data from the table: "order" using primary key columns"""
+  order_by_pk(id: uuid!): order
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "order"
+  """
+  order(
+    """distinct select on columns"""
+    distinct_on: [order_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [order_order_by!]
+
+    """filter the rows returned"""
+    where: order_bool_exp
+  ): [order!]!
+
+  """
+  fetch aggregated fields from the table: "order"
+  """
+  order_aggregate(
+    """distinct select on columns"""
+    distinct_on: [order_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [order_order_by!]
+
+    """filter the rows returned"""
+    where: order_bool_exp
+  ): order_aggregate!
+
+  """fetch data from the table: "order" using primary key columns"""
+  order_by_pk(id: uuid!): order
+}
+
+scalar uuid
+
+"""
+Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
+"""
+input uuid_comparison_exp {
+  _eq: uuid
+  _gt: uuid
+  _gte: uuid
+  _in: [uuid!]
+  _is_null: Boolean
+  _lt: uuid
+  _lte: uuid
+  _neq: uuid
+  _nin: [uuid!]
+}
+

@@ -1,0 +1,7 @@
+mutation MyMutation($id: uuid!) {
+  delete_order_by_pk(id: $id) {
+    id
+    name
+    quantity
+  }
+}

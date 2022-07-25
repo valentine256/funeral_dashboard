@@ -1,0 +1,65 @@
+# frontend
+
+# dependencies
+/frontend/node_modules
+
+# IDE
+/frontend/.idea
+/frontend/.awcache
+/frontend/.vscode
+
+# misc
+/frontend/npm-debug.log
+/frontend/yarn-error.log
+
+# example
+/frontend/quick-start
+
+# tests
+/frontend/test
+/frontend/coverage
+/frontend/.nyc_output
+
+# dist
+/frontend/dist
+/frontend/out
+/frontend/tmp
+
+# environment
+/frontend/.env
+
+# image files
+/frontend/data
+
+# backend
+
+# dependencies
+/backend/node_modules
+
+# IDE
+/backend/.idea
+/backend/.awcache
+/backend/.vscode
+
+# misc
+/backend/npm-debug.log
+/backend/yarn-error.log
+
+# example
+/backend/quick-start
+
+# tests
+/backend/test
+/backend/coverage
+/backend/.nyc_output
+
+# dist
+/backend/dist
+/backend/out
+/backend/tmp
+
+# environment
+/backend/.env
+
+# image files
+/backend/data
